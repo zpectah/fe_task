@@ -1,4 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { theme } from '../styles';
 import AppRouter from './AppRouter';
 
 import '@fontsource/open-sans/300.css';
@@ -11,7 +14,10 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AppRouter />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AppRouter />
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

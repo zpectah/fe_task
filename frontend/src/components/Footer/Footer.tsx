@@ -1,5 +1,5 @@
 import { styled, Box, BoxProps, Container } from '@mui/material';
-import { LAYOUT_MAX_WIDTH_DEFAULT } from '../../constants';
+import { CONTAINER_MAX_WIDTH_DEFAULT } from '../../constants';
 
 const Wrapper = styled(Box)({});
 
@@ -10,7 +10,7 @@ interface FooterProps {
 const Footer = ({ wrapperProps }: FooterProps) => {
   return (
     <Wrapper component="footer" {...wrapperProps}>
-      <Container maxWidth={LAYOUT_MAX_WIDTH_DEFAULT}>...Footer...(some copyright?)</Container>
+      <Container maxWidth={CONTAINER_MAX_WIDTH_DEFAULT}>...Footer...(some copyright?)</Container>
     </Wrapper>
   );
 };

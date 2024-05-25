@@ -1,6 +1,6 @@
 import { styled, Box, Container, BoxProps, ContainerProps } from '@mui/material';
 import { WithChildren } from '../../types';
-import { LAYOUT_MAX_WIDTH_DEFAULT } from '../../constants';
+import { CONTAINER_MAX_WIDTH_DEFAULT } from '../../constants';
 
 const Wrapper = styled(Box)({
   width: '100%',
@@ -15,7 +15,7 @@ interface ViewLayoutProps extends WithChildren {
 }
 
 const ViewLayout = ({
-  maxWidth = LAYOUT_MAX_WIDTH_DEFAULT,
+  maxWidth = CONTAINER_MAX_WIDTH_DEFAULT,
   children,
   wrapperProps,
   containerProps,

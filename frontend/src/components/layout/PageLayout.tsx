@@ -12,13 +12,13 @@ const Wrapper = styled(Box)({
 
 const PageLayout = () => {
   return (
-    <Suspense fallback={<LayoutPreloader />}>
-      <Wrapper>
-        <Header />
+    <Wrapper>
+      <Header />
+      <Suspense fallback={<LayoutPreloader />}>
         <Outlet />
-        <Footer />
-      </Wrapper>
-    </Suspense>
+      </Suspense>
+      <Footer />
+    </Wrapper>
   );
 };
 
