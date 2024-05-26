@@ -6,7 +6,7 @@ import { useAttributesDetail } from '../../../hooks';
 import { LabelsList } from '../components';
 
 interface AttributesDetailProps {
-  onDelete: (id: string, callback?: () => void) => void;
+  onDelete: (id: string) => void;
 }
 
 const AttributesDetail = ({ onDelete }: AttributesDetailProps) => {
@@ -14,7 +14,7 @@ const AttributesDetail = ({ onDelete }: AttributesDetailProps) => {
 
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data, isLoading } = useAttributesDetail(id);
+  const { data } = useAttributesDetail(id);
 
   const closeHandler = () => {
     navigate(ROUTES.attributes.path);
@@ -22,36 +22,26 @@ const AttributesDetail = ({ onDelete }: AttributesDetailProps) => {
   };
 
   const deleteHandler = (id: string) => {
-    onDelete(id, () => {
-      console.log('My callback from DETAIL');
-    });
+    onDelete(id);
   };
 
   useEffect(() => setOpen(!!id), [id]);
 
-  // TODO
-  // Handle 404 error when no data and loaded
-  // Handle error when fetching ... ?
-
   return (
-    <Drawer anchor="right" open={open} onClose={closeHandler} sx={{}} slotProps={{}}>
-      <div>
-        {isLoading ? 'detail loading' : 'loaded'}
+    <Drawer anchor="right" open={open} onClose={closeHandler}>
+      <Stack gap={3} sx={{ padding: ({ spacing }) => spacing(2) }}>
+        {/* TODO {isLoading ? 'detail loading' : 'loaded'}*/}
         <Typography variant="h4">{data?.name}</Typography>
-        <div></div>
-        <div>{JSON.stringify(data, null, 2)}</div>
-        <div>
-          <LabelsList labelIds={data?.labelIds} />
-        </div>
+        <LabelsList labelIds={data?.labelIds} stackProps={{ direction: 'row', gap: 1 }} chipProps={{ size: 'small' }} />
         <Stack direction="row" gap={2}>
           <Button variant="outlined" onClick={closeHandler}>
             Back to list
           </Button>
-          <Button variant="outlined" onClick={() => deleteHandler(data?.id)}>
+          <Button color="error" variant="outlined" onClick={() => deleteHandler(data?.id)}>
             Delete
           </Button>
         </Stack>
-      </div>
+      </Stack>
     </Drawer>
   );
 };

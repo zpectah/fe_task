@@ -8,15 +8,23 @@ import { Footer } from '../Footer';
 const Wrapper = styled(Box)({
   width: '100%',
   height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+const Main = styled(Box)({
+  flex: 1,
 });
 
 const PageLayout = () => {
   return (
     <Wrapper>
       <Header />
-      <Suspense fallback={<LayoutPreloader />}>
-        <Outlet />
-      </Suspense>
+      <Main component="main">
+        <Suspense fallback={<LayoutPreloader />}>
+          <Outlet />
+        </Suspense>
+      </Main>
       <Footer />
     </Wrapper>
   );

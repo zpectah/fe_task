@@ -2,9 +2,10 @@ import { useAttributesItems } from '../../../hooks';
 import { useAttributesContext } from '../contexts';
 import AttributesListFilter from './AttributesListFilter';
 import AttributesListTable from './AttributesListTable';
+import { Stack } from '@mui/material';
 
 interface AttributesListProps {
-  onDelete: (id: string, callback?: () => void) => void;
+  onDelete: (id: string) => void;
 }
 
 const AttributesList = ({ onDelete }: AttributesListProps) => {
@@ -18,17 +19,20 @@ const AttributesList = ({ onDelete }: AttributesListProps) => {
   });
 
   const deleteHandler = (id: string) => {
-    onDelete(id, () => {
-      console.log('My callback from LIST');
-    });
+    onDelete(id);
   };
 
   return (
-    <>
-      {isLoading ? 'loading' : 'loaded'}
+    <Stack direction="column" gap={2}>
+      {/* TODO {isLoading ? 'loading' : 'loaded'}*/}
       <AttributesListFilter />
-      <AttributesListTable attributes={items} onRowDelete={deleteHandler} hasNextPage={meta?.hasNextPage} />
-    </>
+      <AttributesListTable
+        attributes={items}
+        onRowDelete={deleteHandler}
+        hasNextPage={meta?.hasNextPage}
+        isLoading={isLoading}
+      />
+    </Stack>
   );
 };
 

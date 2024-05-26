@@ -10,6 +10,10 @@ interface AttributesContext extends AttributesFilter {
   setSortDir: (sortDir: AttributeListSortDir) => void;
   labels: LabelList;
   setLabels: (labels: LabelList) => void;
+  confirmOpen: boolean;
+  setConfirmOpen: (open: boolean) => void;
+  confirmId: string | null;
+  setConfirmId: (id: string | null) => void;
 }
 
 const defaultContext: AttributesContext = {
@@ -25,6 +29,10 @@ const defaultContext: AttributesContext = {
   setSortDir: () => {},
   labels: [],
   setLabels: () => {},
+  confirmOpen: false,
+  setConfirmOpen: () => {},
+  confirmId: null,
+  setConfirmId: () => {},
 };
 
 const AttributesContext = createContext(defaultContext);

@@ -11,6 +11,9 @@ export const useAttributesContextControl = () => {
   const [sortDir, setSortDir] = useState<AttributeListSortDir>(attributesListSortDirKeys.asc);
   const [labels, setLabels] = useState<LabelList>([]);
 
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+
   return {
     offset,
     setOffset,
@@ -24,5 +27,9 @@ export const useAttributesContextControl = () => {
     setSortDir,
     labels,
     setLabels,
+    confirmOpen,
+    setConfirmOpen,
+    confirmId,
+    setConfirmId,
   };
 };

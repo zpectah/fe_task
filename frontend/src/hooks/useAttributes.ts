@@ -1,8 +1,9 @@
+import { useEffect, useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { AxiosInstance } from 'axios';
 import { useAxiosInstance } from './useAxiosInstance';
 import { Attribute, AttributeList, AttributesFilter, AttributesMeta } from '../types';
 import { API_EP } from '../constants';
-import { useEffect, useState } from 'react';
 
 export const useAttributes = (filter: AttributesFilter) => {
   const { apiBase } = useAxiosInstance();
@@ -28,21 +29,26 @@ export const useAttributesDetail = (id?: string) => {
     queryFn: () => apiBase.get(API_EP.getAttributesDetail(id), {}),
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: () => apiBase.delete(API_EP.deleteAttributesDetail(id), {}),
-  });
-
   return {
     data: data?.data?.data as Attribute,
     ...query,
-    deleteMutation,
   };
 };
+
+export const useDeleteAttributeMutation = (instance: AxiosInstance) =>
+  useMutation({
+    mutationFn: (id: string) => {
+      return instance({
+        url: API_EP.deleteAttributesDetail(id),
+        method: 'DELETE',
+      });
+    },
+  });
 
 export const useAttributesItems = ({ offset, limit, searchText, sortBy, sortDir }: AttributesFilter) => {
   const [attributes, setAttributes] = useState<AttributeList>([]);
 
-  const { data, ...rest } = useAttributes({
+  const { data, isRefetching, ...rest } = useAttributes({
     offset,
     limit,
     searchText,
@@ -51,14 +57,19 @@ export const useAttributesItems = ({ offset, limit, searchText, sortBy, sortDir 
   });
 
   useEffect(() => {
-    if (data)
+    if (isRefetching) setAttributes(data);
+    if (offset > 0) {
       setAttributes(
         Array.from([...attributes, ...data].reduce((map, obj) => map.set(obj.id, obj), new Map()).values())
       );
+    } else {
+      setAttributes(data);
+    }
   }, [data]);
 
   return {
     items: attributes,
+    isRefetching,
     ...rest,
   };
 };

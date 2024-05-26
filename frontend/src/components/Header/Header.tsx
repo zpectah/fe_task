@@ -30,11 +30,12 @@ const Header = () => {
       <Container maxWidth={CONTAINER_MAX_WIDTH_DEFAULT}>
         <Toolbar disableGutters>
           <Typography
-            variant="h6"
+            variant="h1"
             noWrap
             component={Link}
             to="/"
             sx={{
+              fontSize: '1.5rem',
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
               fontWeight: 700,
