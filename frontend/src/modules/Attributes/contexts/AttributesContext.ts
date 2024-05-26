@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { AttributeListSortBy, AttributeListSortDir, AttributesFilter } from '../../../types';
+import { AttributeListSortBy, AttributeListSortDir, AttributesFilter, LabelList } from '../../../types';
 import { attributesListSortByKeys, attributesListSortDirKeys } from '../../../enums';
 
 interface AttributesContext extends AttributesFilter {
@@ -8,6 +8,8 @@ interface AttributesContext extends AttributesFilter {
   setSearchText: (searchText: string) => void;
   setSortBy: (sortBy: AttributeListSortBy) => void;
   setSortDir: (sortDir: AttributeListSortDir) => void;
+  labels: LabelList;
+  setLabels: (labels: LabelList) => void;
 }
 
 const defaultContext: AttributesContext = {
@@ -21,6 +23,8 @@ const defaultContext: AttributesContext = {
   setSearchText: () => {},
   setSortBy: () => {},
   setSortDir: () => {},
+  labels: [],
+  setLabels: () => {},
 };
 
 const AttributesContext = createContext(defaultContext);

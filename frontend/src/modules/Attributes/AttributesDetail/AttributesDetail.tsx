@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Drawer, Typography, Button, Stack } from '@mui/material';
 import { MODAL_CLOSE_DELAY, ROUTES } from '../../../constants';
 import { useAttributesDetail } from '../../../hooks';
-import AttributeDetailLabels from './AttributeDetailLabels';
+import { LabelsList } from '../components';
 
 interface AttributesDetailProps {
   onDelete: (id: string, callback?: () => void) => void;
@@ -41,7 +41,7 @@ const AttributesDetail = ({ onDelete }: AttributesDetailProps) => {
         <div></div>
         <div>{JSON.stringify(data, null, 2)}</div>
         <div>
-          <AttributeDetailLabels labelIds={data?.labelIds} />
+          <LabelsList labelIds={data?.labelIds} />
         </div>
         <Stack direction="row" gap={2}>
           <Button variant="outlined" onClick={closeHandler}>

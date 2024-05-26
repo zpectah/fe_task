@@ -7,8 +7,7 @@ export type Attribute = {
   createdAt: string;
   labelIds: Array<Label['id']>;
   deleted: boolean;
-  // TODO #chyba v zadání? = not generic
-  // labelIds: Array<Label<"id">>
+  // TODO #chyba v zadání? = not generic -> Array<Label<"id">>
 };
 
 export type AttributeList = Attribute[];

@@ -1,10 +1,13 @@
+import { useEffect } from 'react';
+import { useLabelsItems } from '../../hooks';
 import { ViewLayout } from '../../components';
-import { AttributesList } from './AttributesList';
-import { AttributesDetail } from './AttributesDetail';
 import { AttributesContextProvider } from './contexts';
 import { useAttributesContextControl } from './hooks';
+import { AttributesList } from './AttributesList';
+import { AttributesDetail } from './AttributesDetail';
 
 const Attributes = () => {
+  const { labels } = useLabelsItems();
   const providerValue = useAttributesContextControl();
 
   const deleteHandler = (id: string, callback?: () => void) => {
@@ -13,6 +16,8 @@ const Attributes = () => {
     // TODO - this is callback after api call
     callback?.();
   };
+
+  useEffect(() => providerValue.setLabels(labels), [labels]);
 
   return (
     <AttributesContextProvider value={providerValue}>

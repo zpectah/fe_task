@@ -9,3 +9,7 @@ export interface LabelsFilter {
   offset: number;
   limit: number;
 }
+
+export interface LabelsMeta extends LabelsFilter {
+  hasNextPage: boolean;
+}
