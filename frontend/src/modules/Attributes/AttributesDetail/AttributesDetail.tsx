@@ -6,7 +6,7 @@ import { useAttributesDetail } from '../../../hooks';
 import AttributeDetailLabels from './AttributeDetailLabels';
 
 interface AttributesDetailProps {
-  onDelete: (id: string, callback?: Function) => void;
+  onDelete: (id: string, callback?: () => void) => void;
 }
 
 const AttributesDetail = ({ onDelete }: AttributesDetailProps) => {

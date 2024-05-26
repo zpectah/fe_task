@@ -2,6 +2,7 @@ import { useState, MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Toolbar, AppBar, IconButton, Typography, Menu, Container, Button, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import { PROJECT } from '../../config';
 import { CONTAINER_MAX_WIDTH_DEFAULT } from '../../constants';
 
 const menuItems = [
@@ -41,7 +42,7 @@ const Header = () => {
               textDecoration: 'none',
             }}
           >
-            MEIRO
+            {PROJECT.meta.name}
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -96,12 +97,12 @@ const Header = () => {
               textDecoration: 'none',
             }}
           >
-            MEIRO
+            {PROJECT.meta.name}
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} />
           <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
             {menuItems.map((item) => (
-              <Button key={item.key} component={Link} to={item.path} color="secondary">
+              <Button key={item.key} component={Link} to={item.path}>
                 {item.label}
               </Button>
             ))}

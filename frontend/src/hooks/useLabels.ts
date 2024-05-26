@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { useAxiosInstance } from './useAxiosInstance';
-import { LabelList } from '../types';
+import { LabelList, LabelsFilter } from '../types';
 import { API_EP } from '../constants';
 
-export const useLabels = () => {
+export const useLabels = (filter: LabelsFilter) => {
   const { apiBase } = useAxiosInstance();
 
   const { data, ...query } = useQuery({
-    queryKey: ['labels'],
-    queryFn: () => apiBase.get(API_EP.getLabels, {}),
+    queryKey: ['labels', Object.values(filter)],
+    queryFn: () => apiBase.get(API_EP.getLabels, { params: { ...filter } }),
   });
 
   return {

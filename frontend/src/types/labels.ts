@@ -4,3 +4,8 @@ export type Label = {
 };
 
 export type LabelList = Label[];
+
+export interface LabelsFilter {
+  offset: number;
+  limit: number;
+}

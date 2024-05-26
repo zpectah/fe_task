@@ -7,7 +7,10 @@ interface AttributeDetailLabelsProps {
 }
 
 const AttributeDetailLabels = ({ labelIds = [] }: AttributeDetailLabelsProps) => {
-  const { data } = useLabels();
+  const { data } = useLabels({
+    offset: 0,
+    limit: 10,
+  });
 
   const labels = useMemo(() => {
     return [...data.filter((label) => labelIds.includes(label.id))];

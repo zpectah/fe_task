@@ -1,4 +1,5 @@
-import { styled, Box, BoxProps, Container } from '@mui/material';
+import { styled, Box, Container, Typography, Stack, BoxProps } from '@mui/material';
+import { PROJECT } from '../../config';
 import { CONTAINER_MAX_WIDTH_DEFAULT } from '../../constants';
 
 const Wrapper = styled(Box)({});
@@ -10,7 +11,13 @@ interface FooterProps {
 const Footer = ({ wrapperProps }: FooterProps) => {
   return (
     <Wrapper component="footer" {...wrapperProps}>
-      <Container maxWidth={CONTAINER_MAX_WIDTH_DEFAULT}>...Footer...(some copyright?)</Container>
+      <Container maxWidth={CONTAINER_MAX_WIDTH_DEFAULT}>
+        <Stack>
+          <Typography variant="caption" sx={{ textAlign: 'center' }}>
+            {PROJECT.meta.name} - {PROJECT.meta.description} ({PROJECT.meta.year})
+          </Typography>
+        </Stack>
+      </Container>
     </Wrapper>
   );
 };
