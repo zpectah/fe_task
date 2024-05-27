@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format:check": "prettier --check .",
-    "format:write": "prettier --write ."
+    "format:fix": "prettier --write ."
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",

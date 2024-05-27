@@ -6,7 +6,6 @@ export const useAxiosInstance = (config?: CreateAxiosDefaults) => {
     baseURL: API_BASE,
     headers: {
       'Content-Type': 'application/json',
-      // 'Access-Control-Allow-Origin': '*',
       ...config?.headers,
     },
     ...config,

@@ -4,7 +4,7 @@ import { Label } from '../../../types';
 import { useAttributesContext } from '../contexts';
 
 export interface LabelsListProps {
-  labelIds: Array<Label['id']>;
+  labelIds: Label['id'][];
   stackProps?: Partial<StackProps>;
   chipProps?: Partial<ChipProps>;
 }

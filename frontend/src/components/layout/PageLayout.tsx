@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { styled, Box } from '@mui/material';
+import { HEADER_DESKTOP_HEIGHT } from '../../constants';
 import { LayoutPreloader } from '../preloader';
 import { Header } from '../Header';
 import { Footer } from '../Footer';
-import { HEADER_DESKTOP_HEIGHT } from '../../constants';
 
 const Wrapper = styled(Box)({
   width: '100%',
