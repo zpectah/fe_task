@@ -1,23 +1,29 @@
-import { useEffect, useState } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useInfiniteQuery } from '@tanstack/react-query';
 import { AxiosInstance } from 'axios';
 import { useAxiosInstance } from './useAxiosInstance';
-import { Attribute, AttributeList, AttributesFilter, AttributesMeta } from '../types';
+import { Attribute, AttributesFilter, AttributesResponse } from '../types';
 import { API_EP } from '../constants';
 
-export const useAttributes = (filter: AttributesFilter) => {
-  const { apiBase } = useAxiosInstance();
-
-  const { data, ...query } = useQuery({
-    queryKey: ['attributes', Object.values(filter)],
-    queryFn: () => apiBase.get(API_EP.getAttributes, { params: { ...filter } }),
-  });
+const fetchAttributes = async (instance: AxiosInstance, filter: AttributesFilter): Promise<AttributesResponse> => {
+  const response = await instance.get(API_EP.getAttributes, { params: { ...filter } });
 
   return {
-    data: (data?.data?.data ?? []) as AttributeList,
-    meta: data?.data?.meta as AttributesMeta,
-    ...query,
+    data: response.data?.data ?? [],
+    meta: response?.data?.meta,
   };
+};
+
+export const useInfinityAttributes = ({ offset, limit, sortBy, sortDir, searchText }: AttributesFilter) => {
+  const { apiBase } = useAxiosInstance();
+
+  return useInfiniteQuery<AttributesResponse>({
+    initialData: undefined,
+    initialPageParam: undefined,
+    queryKey: ['attributes', Object.values({ offset, limit, sortBy, sortDir, searchText })],
+    queryFn: ({ pageParam }) =>
+      fetchAttributes(apiBase, { offset: (pageParam as number) ?? 0, limit, sortBy, sortDir, searchText }),
+    getNextPageParam: (lastPage, pages) => (lastPage.meta.hasNextPage ? pages.length * limit : undefined),
+  });
 };
 
 export const useAttributesDetail = (id?: string) => {
@@ -44,32 +50,3 @@ export const useDeleteAttributeMutation = (instance: AxiosInstance) =>
       });
     },
   });
-
-export const useAttributesItems = ({ offset, limit, searchText, sortBy, sortDir }: AttributesFilter) => {
-  const [attributes, setAttributes] = useState<AttributeList>([]);
-
-  const { data, isRefetching, ...rest } = useAttributes({
-    offset,
-    limit,
-    searchText,
-    sortBy,
-    sortDir,
-  });
-
-  useEffect(() => {
-    if (isRefetching) setAttributes(data);
-    if (offset > 0) {
-      setAttributes(
-        Array.from([...attributes, ...data].reduce((map, obj) => map.set(obj.id, obj), new Map()).values())
-      );
-    } else {
-      setAttributes(data);
-    }
-  }, [data]);
-
-  return {
-    items: attributes,
-    isRefetching,
-    ...rest,
-  };
-};

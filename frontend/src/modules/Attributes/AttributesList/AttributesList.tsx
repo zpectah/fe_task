@@ -1,36 +1,42 @@
-import { useAttributesItems } from '../../../hooks';
+import { useEffect } from 'react';
+import { Stack } from '@mui/material';
+import { AttributeInfinityListResponse } from '../../../types';
+import { useInfinityAttributes } from '../../../hooks';
 import { useAttributesContext } from '../contexts';
 import AttributesListFilter from './AttributesListFilter';
-import AttributesListTable from './AttributesListTable';
-import { Stack } from '@mui/material';
+import AttributesListTable2 from './AttributesListTable';
 
 interface AttributesListProps {
   onDelete: (id: string) => void;
 }
 
 const AttributesList = ({ onDelete }: AttributesListProps) => {
-  const { offset, limit, searchText, sortBy, sortDir } = useAttributesContext();
-  const { items, meta, isLoading } = useAttributesItems({
+  const { offset, limit, searchText, sortBy, sortDir, setOffset } = useAttributesContext();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, isLoading } = useInfinityAttributes({
     offset,
     limit,
-    searchText,
     sortBy,
     sortDir,
+    searchText,
   });
 
-  const deleteHandler = (id: string) => {
-    onDelete(id);
-  };
+  const deleteHandler = (id: string) => onDelete(id);
+
+  useEffect(() => {
+    if (data?.pageParams[1]) setOffset(data?.pageParams[1] as number);
+  }, [data]);
 
   return (
     <Stack direction="column" gap={2}>
-      {/* TODO {isLoading ? 'loading' : 'loaded'}*/}
       <AttributesListFilter />
-      <AttributesListTable
-        attributes={items}
+      <AttributesListTable2
         onRowDelete={deleteHandler}
-        hasNextPage={meta?.hasNextPage}
+        fetchNextPage={fetchNextPage}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        status={status}
         isLoading={isLoading}
+        data={data as AttributeInfinityListResponse}
       />
     </Stack>
   );

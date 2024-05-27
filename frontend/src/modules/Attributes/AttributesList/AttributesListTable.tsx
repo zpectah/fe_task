@@ -1,5 +1,6 @@
-import { useCallback } from 'react';
+import { useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import dayjs from 'dayjs';
 import {
   Table,
   TableBody,
@@ -11,43 +12,75 @@ import {
   Button,
   Typography,
   Box,
+  Stack,
 } from '@mui/material';
-import { AttributeList } from '../../../types';
+import { AttributeInfinityListResponse } from '../../../types';
 import { ATTRIBUTES_SEARCH_MIN_LENGTH, ROUTES } from '../../../constants';
 import { useAttributesContext } from '../contexts';
 import { LabelsList } from '../components';
 
-import { InfiniteScroll } from '../../../components';
-
 interface AttributesListTableProps {
-  attributes: AttributeList;
   onRowDelete: (id: string) => void;
+  fetchNextPage: () => void;
   hasNextPage: boolean;
-  isLoading?: boolean;
+  isFetchingNextPage: boolean;
+  status: 'success' | 'error' | 'pending';
+  isLoading: boolean;
+  data: AttributeInfinityListResponse;
 }
 
-const AttributesListTable = ({ attributes = [], onRowDelete, hasNextPage, isLoading }: AttributesListTableProps) => {
-  const { offset, limit, searchText, setOffset } = useAttributesContext();
+const AttributesListTable = ({
+  onRowDelete,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
+  status,
+  isLoading,
+  data,
+}: AttributesListTableProps) => {
+  const { searchText } = useAttributesContext();
 
-  const nextPageHandler = useCallback(() => {
-    if (hasNextPage) setOffset(offset + limit);
-  }, [hasNextPage, offset, limit]);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (isFetchingNextPage) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage?.();
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [isFetchingNextPage, fetchNextPage, hasNextPage]
+  );
 
   return (
-    <Box id="scrollableDiv" sx={{ height: '100%', overflowY: 'scroll' }}>
-      <InfiniteScroll onNext={nextPageHandler} hasMore={hasNextPage} isLoading={isLoading}>
-        <TableContainer component={Paper}>
-          <Table aria-label="attributes table">
-            <TableHead>
+    <Box sx={{ height: '100%', overflowY: 'scroll' }}>
+      <TableContainer component={Paper}>
+        <Table aria-label="attributes table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Labels</TableCell>
+              <TableCell>Created at</TableCell>
+              <TableCell align="right">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {isLoading && (
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Labels</TableCell>
-                <TableCell>Created at</TableCell>
-                <TableCell align="right">Actions</TableCell>
+                <TableCell colSpan={4}>Loading</TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {attributes.map((row) => (
+            )}
+            {status === 'error' && (
+              <TableRow>
+                <TableCell colSpan={4}>Error while loading data</TableCell>
+              </TableRow>
+            )}
+            {data?.pages
+              .flatMap((page) => page.data)
+              .map((row) => (
                 <TableRow key={row.id}>
                   <TableCell>
                     <Typography
@@ -56,7 +89,7 @@ const AttributesListTable = ({ attributes = [], onRowDelete, hasNextPage, isLoad
                       to={`${ROUTES.attributes.path}/${row.id}`}
                       sx={{ color: 'inherit', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
                     >
-                      {row.name} / {row.id} | {row.deleted ? 'deleted' : 'ok'}
+                      {row.name}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -66,26 +99,40 @@ const AttributesListTable = ({ attributes = [], onRowDelete, hasNextPage, isLoad
                       chipProps={{ size: 'small', variant: 'outlined' }}
                     />
                   </TableCell>
-                  <TableCell>{row.createdAt}</TableCell>
+                  <TableCell>{`${dayjs(row.createdAt).format('YYYY-MM-DD')}`}</TableCell>
                   <TableCell align="right">
-                    <Button size="small" color="error" onClick={() => onRowDelete(row.id)}>
-                      Delete
-                    </Button>
-                    <Button size="small" component={Link} to={`${ROUTES.attributes.path}/${row.id}`}>
-                      Detail
-                    </Button>
+                    <Stack direction="row" gap={1} justifyContent="end">
+                      <Button size="small" variant="outlined" color="error" onClick={() => onRowDelete(row.id)}>
+                        Delete
+                      </Button>
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        component={Link}
+                        to={`${ROUTES.attributes.path}/${row.id}`}
+                      >
+                        Detail
+                      </Button>
+                    </Stack>
                   </TableCell>
                 </TableRow>
               ))}
-              {searchText.length > ATTRIBUTES_SEARCH_MIN_LENGTH && !isLoading && attributes.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={4}>For "{searchText}" nothing was found</TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </InfiniteScroll>
+            {searchText.length > ATTRIBUTES_SEARCH_MIN_LENGTH && !isLoading && data?.pages[0].data.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={4}>For "{searchText}" nothing was found</TableCell>
+              </TableRow>
+            )}
+            {isFetchingNextPage && (
+              <TableRow>
+                <TableCell colSpan={4}>Loading more ...</TableCell>
+              </TableRow>
+            )}
+            <TableRow ref={lastElementRef} style={{ height: 20, display: hasNextPage ? 'table-row' : 'none' }}>
+              <TableCell colSpan={4}>...</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Box>
   );
 };

@@ -28,9 +28,15 @@ const AttributesDetail = ({ onDelete }: AttributesDetailProps) => {
   useEffect(() => setOpen(!!id), [id]);
 
   return (
-    <Drawer anchor="right" open={open} onClose={closeHandler}>
+    <Drawer
+      anchor="right"
+      open={open}
+      onClose={closeHandler}
+      PaperProps={{
+        sx: { width: '50%' },
+      }}
+    >
       <Stack gap={3} sx={{ padding: ({ spacing }) => spacing(2) }}>
-        {/* TODO {isLoading ? 'detail loading' : 'loaded'}*/}
         <Typography variant="h4">{data?.name}</Typography>
         <LabelsList labelIds={data?.labelIds} stackProps={{ direction: 'row', gap: 1 }} chipProps={{ size: 'small' }} />
         <Stack direction="row" gap={2}>

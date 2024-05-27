@@ -11,31 +11,14 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
 import { AttributeListSortBy, AttributeListSortDir } from '../../../types';
-import { ATTRIBUTES_SEARCH_MIN_LENGTH } from '../../../constants';
+import {
+  ATTRIBUTES_SEARCH_MIN_LENGTH,
+  ATTRIBUTES_SORT_BY_OPTIONS,
+  ATTRIBUTES_SORT_DIR_OPTIONS,
+} from '../../../constants';
 import { useAttributesContext } from '../contexts';
-
-const sortByOptions = [
-  {
-    value: 'name',
-    label: 'Name',
-  },
-  {
-    value: 'createdAt',
-    label: 'Created At',
-  },
-];
-
-const sortDirOptions = [
-  {
-    value: 'asc',
-    label: 'Ascend',
-  },
-  {
-    value: 'desc',
-    label: 'Descend',
-  },
-];
 
 const AttributesListFilter = () => {
   const [searchStringTmp, setSearchStringTmp] = useState('');
@@ -56,12 +39,12 @@ const AttributesListFilter = () => {
     }
   };
 
-  const sortByHandler = (event: SelectChangeEvent<'name' | 'createdAt'>) => {
+  const sortByHandler = (event: SelectChangeEvent<AttributeListSortBy>) => {
     setSortBy(event.target.value as AttributeListSortBy);
     setOffset(0);
   };
 
-  const sortDirectionHandler = (event: SelectChangeEvent<'asc' | 'desc'>) => {
+  const sortDirectionHandler = (event: SelectChangeEvent<AttributeListSortDir>) => {
     setSortDir(event.target.value as AttributeListSortDir);
     setOffset(0);
   };
@@ -80,11 +63,17 @@ const AttributesListFilter = () => {
             <OutlinedInput
               value={searchStringTmp}
               onChange={searchTextHandler}
+              placeholder="Search in table"
               slotProps={{
                 input: {
                   minLength: ATTRIBUTES_SEARCH_MIN_LENGTH,
                 },
               }}
+              startAdornment={
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              }
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -100,7 +89,7 @@ const AttributesListFilter = () => {
           </div>
           <div>
             <Select value={sortBy} onChange={sortByHandler}>
-              {sortByOptions.map((option) => (
+              {ATTRIBUTES_SORT_BY_OPTIONS.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
@@ -109,7 +98,7 @@ const AttributesListFilter = () => {
           </div>
           <div>
             <Select value={sortDir} onChange={sortDirectionHandler}>
-              {sortDirOptions.map((option) => (
+              {ATTRIBUTES_SORT_DIR_OPTIONS.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>

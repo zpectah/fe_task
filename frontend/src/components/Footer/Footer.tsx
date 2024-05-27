@@ -2,7 +2,9 @@ import { styled, Box, Container, Typography, Stack, BoxProps } from '@mui/materi
 import { PROJECT } from '../../config';
 import { CONTAINER_MAX_WIDTH_DEFAULT } from '../../constants';
 
-const Wrapper = styled(Box)({});
+const Wrapper = styled(Box)(({ theme: { spacing } }) => ({
+  padding: spacing(2),
+}));
 
 interface FooterProps {
   wrapperProps?: Partial<Omit<BoxProps, 'component'>>;

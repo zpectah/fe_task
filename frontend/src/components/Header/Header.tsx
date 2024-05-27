@@ -3,20 +3,7 @@ import { Link } from 'react-router-dom';
 import { Box, Toolbar, AppBar, IconButton, Typography, Menu, Container, Button, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { PROJECT } from '../../config';
-import { CONTAINER_MAX_WIDTH_DEFAULT } from '../../constants';
-
-const menuItems = [
-  {
-    key: 1,
-    label: 'Home',
-    path: '/',
-  },
-  {
-    key: 2,
-    label: 'Attributes',
-    path: '/attributes',
-  },
-];
+import { CONTAINER_MAX_WIDTH_DEFAULT, HEADER_DESKTOP_HEIGHT, MAIN_MENU } from '../../constants';
 
 const Header = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -26,7 +13,7 @@ const Header = () => {
   const closeNavMenuHandler = () => setAnchorElNav(null);
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed" sx={{ height: HEADER_DESKTOP_HEIGHT }}>
       <Container maxWidth={CONTAINER_MAX_WIDTH_DEFAULT}>
         <Toolbar disableGutters>
           <Typography
@@ -75,7 +62,7 @@ const Header = () => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {menuItems.map((item) => (
+              {MAIN_MENU.map((item) => (
                 <MenuItem key={item.key} onClick={closeNavMenuHandler}>
                   <Typography component={Link} to={item.path} sx={{ color: 'inherit', textDecoration: 'none' }}>
                     {item.label}
@@ -102,7 +89,7 @@ const Header = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} />
           <Box sx={{ flexGrow: 0, display: { xs: 'none', md: 'flex' } }}>
-            {menuItems.map((item) => (
+            {MAIN_MENU.map((item) => (
               <Button key={item.key} component={Link} to={item.path}>
                 {item.label}
               </Button>

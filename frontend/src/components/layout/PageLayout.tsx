@@ -4,6 +4,7 @@ import { styled, Box } from '@mui/material';
 import { LayoutPreloader } from '../preloader';
 import { Header } from '../Header';
 import { Footer } from '../Footer';
+import { HEADER_DESKTOP_HEIGHT } from '../../constants';
 
 const Wrapper = styled(Box)({
   width: '100%',
@@ -13,6 +14,7 @@ const Wrapper = styled(Box)({
 });
 
 const Main = styled(Box)({
+  paddingTop: HEADER_DESKTOP_HEIGHT,
   flex: 1,
 });
 

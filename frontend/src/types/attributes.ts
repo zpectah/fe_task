@@ -26,3 +26,12 @@ export interface AttributesFilter {
 export interface AttributesMeta extends AttributesFilter {
   hasNextPage: boolean;
 }
+
+export type AttributesResponse = {
+  data: AttributeList;
+  meta: AttributesMeta;
+};
+
+export type AttributeInfinityListResponse = {
+  pages: Pick<AttributesResponse, 'data'>[];
+};

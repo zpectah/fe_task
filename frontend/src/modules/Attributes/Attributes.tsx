@@ -1,53 +1,53 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useLabelsItems, useDeleteAttributeMutation, useAxiosInstance, useAttributes } from '../../hooks';
+import { useLabelsItems, useDeleteAttributeMutation, useAxiosInstance, useInfinityAttributes } from '../../hooks';
 import { ROUTES } from '../../constants';
 import { ViewLayout, ConfirmDialog } from '../../components';
 import { AttributesContextProvider } from './contexts';
 import { useAttributesContextControl } from './hooks';
+import { FeedbackSnack } from './components';
 import { AttributesList } from './AttributesList';
 import { AttributesDetail } from './AttributesDetail';
 
 const Attributes = () => {
-  const { labels } = useLabelsItems();
+  const [snackSuccessOpen, setSnackSuccessOpen] = useState(false);
+
   const providerValue = useAttributesContextControl();
-  const { apiBase } = useAxiosInstance();
-  const deleteMutation = useDeleteAttributeMutation(apiBase);
+  const { offset, limit, searchText, sortBy, sortDir, confirmId, setConfirmId, setConfirmOpen, setLabels } =
+    providerValue;
+
   const navigate = useNavigate();
   const { id } = useParams();
-  const { refetch } = useAttributes({
-    offset: providerValue.offset,
-    limit: providerValue.limit,
-    searchText: providerValue.searchText,
-    sortBy: providerValue.sortBy,
-    sortDir: providerValue.sortDir,
-  });
+  const { labels } = useLabelsItems();
+  const { refetch } = useInfinityAttributes({ offset, limit, searchText, sortBy, sortDir });
+  const { apiBase } = useAxiosInstance();
+  const deleteMutation = useDeleteAttributeMutation(apiBase);
 
   const deleteHandler = (id: string) => {
-    providerValue.setConfirmId(id);
-    providerValue.setConfirmOpen(true);
+    setConfirmId(id);
+    setConfirmOpen(true);
   };
 
   const closeHandler = () => {
-    providerValue.setConfirmId(null);
-    providerValue.setConfirmOpen(false);
+    setConfirmId(null);
+    setConfirmOpen(false);
   };
 
   const confirmHandler = () => {
-    if (providerValue.confirmId) {
+    if (confirmId) {
       if (id) navigate(ROUTES.attributes.path);
-      deleteMutation.mutate(providerValue.confirmId, {
+      deleteMutation.mutate(confirmId, {
         onSuccess: () => {
           closeHandler();
-          setTimeout(() => {
-            refetch();
-          }, 250);
+          refetch().then(() => {
+            setSnackSuccessOpen(true);
+          });
         },
       });
     }
   };
 
-  useEffect(() => providerValue.setLabels(labels), [labels]);
+  useEffect(() => setLabels(labels), [labels]);
 
   return (
     <AttributesContextProvider value={providerValue}>
@@ -63,6 +63,9 @@ const Attributes = () => {
       >
         Are you sure you want delete #{providerValue.confirmId} item?
       </ConfirmDialog>
+      <FeedbackSnack open={snackSuccessOpen} onClose={() => setSnackSuccessOpen(false)}>
+        Item was successfully deleted
+      </FeedbackSnack>
     </AttributesContextProvider>
   );
 };
