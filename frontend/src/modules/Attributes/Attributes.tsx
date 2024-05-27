@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLabelsItems, useDeleteAttributeMutation, useAxiosInstance, useInfinityAttributes } from '../../hooks';
-import { ROUTES } from '../../constants';
+import { ROUTES, DIALOG_CLOSE_DELAY } from '../../constants';
 import { ViewLayout, ConfirmDialog } from '../../components';
 import { AttributesContextProvider } from './contexts';
 import { useAttributesContextControl } from './hooks';
@@ -15,7 +15,6 @@ const Attributes = () => {
   const providerValue = useAttributesContextControl();
   const { offset, limit, searchText, sortBy, sortDir, confirmId, setConfirmId, setConfirmOpen, setLabels } =
     providerValue;
-
   const navigate = useNavigate();
   const { id } = useParams();
   const { labels } = useLabelsItems();
@@ -29,8 +28,10 @@ const Attributes = () => {
   };
 
   const closeHandler = () => {
-    setConfirmId(null);
     setConfirmOpen(false);
+    setTimeout(() => {
+      setConfirmId(null);
+    }, DIALOG_CLOSE_DELAY);
   };
 
   const confirmHandler = () => {

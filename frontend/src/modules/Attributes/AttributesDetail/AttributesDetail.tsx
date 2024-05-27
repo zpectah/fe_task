@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Drawer, Typography, Button, Stack } from '@mui/material';
-import { MODAL_CLOSE_DELAY, ROUTES } from '../../../constants';
+import { ROUTES } from '../../../constants';
 import { useAttributesDetail } from '../../../hooks';
 import { LabelsList } from '../components';
 
@@ -18,7 +18,7 @@ const AttributesDetail = ({ onDelete }: AttributesDetailProps) => {
 
   const closeHandler = () => {
     navigate(ROUTES.attributes.path);
-    setTimeout(() => setOpen(false), MODAL_CLOSE_DELAY);
+    setOpen(false);
   };
 
   const deleteHandler = (id: string) => {

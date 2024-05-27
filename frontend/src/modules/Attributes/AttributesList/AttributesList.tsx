@@ -4,7 +4,7 @@ import { AttributeInfinityListResponse } from '../../../types';
 import { useInfinityAttributes } from '../../../hooks';
 import { useAttributesContext } from '../contexts';
 import AttributesListFilter from './AttributesListFilter';
-import AttributesListTable2 from './AttributesListTable';
+import AttributesListTable from './AttributesListTable';
 
 interface AttributesListProps {
   onDelete: (id: string) => void;
@@ -29,7 +29,7 @@ const AttributesList = ({ onDelete }: AttributesListProps) => {
   return (
     <Stack direction="column" gap={2}>
       <AttributesListFilter />
-      <AttributesListTable2
+      <AttributesListTable
         onRowDelete={deleteHandler}
         fetchNextPage={fetchNextPage}
         hasNextPage={hasNextPage}

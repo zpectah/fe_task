@@ -1,4 +1,4 @@
-import { attributesListSortByKeys, attributesListSortDirKeys } from '../enums';
+import { attributesListSortByKeys, attributesListSortDirKeys, attributesResponseStatusKeys } from '../enums';
 import { Label } from './labels';
 
 export type Attribute = {
@@ -14,6 +14,7 @@ export type AttributeList = Attribute[];
 
 export type AttributeListSortBy = keyof typeof attributesListSortByKeys;
 export type AttributeListSortDir = keyof typeof attributesListSortDirKeys;
+export type AttributeResponseStatus = keyof typeof attributesResponseStatusKeys;
 
 export interface AttributesFilter {
   offset: number;

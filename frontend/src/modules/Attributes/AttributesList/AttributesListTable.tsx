@@ -14,8 +14,9 @@ import {
   Box,
   Stack,
 } from '@mui/material';
-import { AttributeInfinityListResponse } from '../../../types';
+import { AttributeInfinityListResponse, AttributeResponseStatus } from '../../../types';
 import { ATTRIBUTES_SEARCH_MIN_LENGTH, ROUTES } from '../../../constants';
+import { attributesResponseStatusKeys } from '../../../enums';
 import { useAttributesContext } from '../contexts';
 import { LabelsList } from '../components';
 
@@ -24,7 +25,7 @@ interface AttributesListTableProps {
   fetchNextPage: () => void;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
-  status: 'success' | 'error' | 'pending';
+  status: AttributeResponseStatus;
   isLoading: boolean;
   data: AttributeInfinityListResponse;
 }
@@ -39,7 +40,6 @@ const AttributesListTable = ({
   data,
 }: AttributesListTableProps) => {
   const { searchText } = useAttributesContext();
-
   const observer = useRef<IntersectionObserver | null>(null);
   const lastElementRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -73,7 +73,7 @@ const AttributesListTable = ({
                 <TableCell colSpan={4}>Loading</TableCell>
               </TableRow>
             )}
-            {status === 'error' && (
+            {status === attributesResponseStatusKeys.error && (
               <TableRow>
                 <TableCell colSpan={4}>Error while loading data</TableCell>
               </TableRow>

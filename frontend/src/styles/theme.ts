@@ -5,6 +5,9 @@ export const theme = createTheme({
     mode: 'dark',
   },
   typography: {
+    fontWeightRegular: 500,
+    fontWeightMedium: 700,
+    fontWeightBold: 800,
     button: {
       fontWeight: 600,
     },
