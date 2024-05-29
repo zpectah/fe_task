@@ -5,6 +5,7 @@ export const theme = createTheme({
     mode: 'dark',
   },
   typography: {
+    fontFamily: '"Open Sans", system-ui, Avenir, Helvetica, Arial, sans-serif',
     fontWeightRegular: 500,
     fontWeightMedium: 700,
     fontWeightBold: 800,
